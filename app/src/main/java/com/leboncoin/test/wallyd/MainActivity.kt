@@ -3,37 +3,41 @@ package com.leboncoin.test.wallyd
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.leboncoin.test.wallyd.adapter.AlbumsAdapter
 import com.leboncoin.test.wallyd.api.ApiHelper
 import com.leboncoin.test.wallyd.api.ApiServiceImpl
 import com.leboncoin.test.wallyd.databinding.ActivityMainBinding
 import com.leboncoin.test.wallyd.viewModel.MainActivityViewModel
 import com.leboncoin.test.wallyd.viewModel.ViewModelFactory
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var mainActivityViewModel: MainActivityViewModel
-    private var albumsAdapter: AlbumsAdapter = AlbumsAdapter()
-    private lateinit var recyclerView: RecyclerView
+    private lateinit var albumsAdapter: AlbumsAdapter
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        setUpAdapter()
         setupViewModel()
+        setUpAdapter()
         setUpObserver()
 
     }
 
     private fun setUpAdapter() {
-        recyclerView = binding.recyclerView
-        recyclerView.adapter = albumsAdapter
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        albumsAdapter = AlbumsAdapter()
+        binding.recyclerView.apply {
+            layoutManager = LinearLayoutManager(this@MainActivity)
+            adapter = albumsAdapter
+        }
     }
 
     private fun setupViewModel() {
@@ -44,9 +48,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setUpObserver() {
-        mainActivityViewModel.fetchAlbums()
-        mainActivityViewModel.albumsList.observe(this, Observer {
-            albumsAdapter.setAlbumsData(it)
-        })
+        val scope = CoroutineScope(Job() + Dispatchers.Main)
+        scope.launch {
+            mainActivityViewModel.fetchAlbums().collectLatest {
+                albumsAdapter.submitData(it)
+            }
+        }
     }
 }
