@@ -6,5 +6,5 @@ import retrofit2.http.Query
 
 interface ApiService {
     @GET("technical-test.json")
-    suspend fun getAlbums(@Query ("")nextPageNumber: Int): List<AlbumsModel>
+    suspend fun getAlbums(@Query ("")nextPageNumber: Int): ArrayList<AlbumsModel>
 }

@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.leboncoin.test.wallyd.adapter.AlbumsAdapter
 import com.leboncoin.test.wallyd.api.ApiHelper
@@ -22,6 +23,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mainActivityViewModel: MainActivityViewModel
     private lateinit var albumsAdapter: AlbumsAdapter
     private lateinit var binding: ActivityMainBinding
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,17 +44,32 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupViewModel() {
         mainActivityViewModel =
-            ViewModelProvider(this, ViewModelFactory(ApiHelper(ApiServiceImpl()))).get(
+            ViewModelProvider(
+                this,
+                ViewModelFactory(ApiHelper(ApiServiceImpl()), this.application)
+            ).get(
                 MainActivityViewModel::class.java
             )
     }
 
+
     private fun setUpObserver() {
-        val scope = CoroutineScope(Job() + Dispatchers.Main)
-        scope.launch {
-            mainActivityViewModel.fetchAlbums().collectLatest {
-                albumsAdapter.submitData(it)
+        lifecycleScope.launch {
+            when {
+                mainActivityViewModel.checkAlbum() -> {
+                    fetchAlbumFromDatabase()
+                }
+                else -> {
+                    mainActivityViewModel.insertAlbums()
+                    fetchAlbumFromDatabase()
+                }
             }
+        }
+    }
+
+    private suspend fun fetchAlbumFromDatabase() {
+        mainActivityViewModel.fetchAlbums().collectLatest {
+            albumsAdapter.submitData(it)
         }
     }
 }

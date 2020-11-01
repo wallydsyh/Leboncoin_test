@@ -1,17 +1,13 @@
 package com.leboncoin.test.wallyd.model
 
-import androidx.lifecycle.AndroidViewModel
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
+@Entity
 data class AlbumsModel(
     val albumId: Int,
-
-    val id: Int,
-
+    @PrimaryKey val id: Int,
     val title: String,
-
     val url: String,
-
     val thumbnailUrl: String
 )
