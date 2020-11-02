@@ -39,7 +39,7 @@
                 tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
             <TextView
-                android:id="@+id/textView_album_id"
+                android:id="@+id/textView_id"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="1"

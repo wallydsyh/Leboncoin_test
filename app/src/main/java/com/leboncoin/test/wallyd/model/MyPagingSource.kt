@@ -4,19 +4,24 @@ import androidx.paging.PagingSource
 import com.leboncoin.test.wallyd.repository.AlbumsRepository
 
 class MyPagingSource(
-    val repository: AlbumsRepository,
-    val query: String
+    private val repository: AlbumsRepository,
+    private val albumDao: AlbumDao
 ) : PagingSource<Int, AlbumsModel>() {
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, AlbumsModel> {
         // Start refresh at page 1 if undefined.
         val nextPageNumber = params.key ?: 1
-        val response = repository.getAlbumsList(nextPageNumber)
+        if (isDatabaseEmpty()) {
+            albumDao.insert(repository.getAlbumsList())
+        }
+        val data = albumDao.allAlbums(nextPageNumber)
         return LoadResult.Page(
-            data = response,
+            data = data,
             prevKey = null, // Only paging forward.
-            nextKey = response.lastOrNull()?.id
+            nextKey = nextPageNumber.plus(1)
         )
-
     }
-    override val keyReuseSupported: Boolean = true
+
+    private suspend fun isDatabaseEmpty(): Boolean {
+        return albumDao.checkAlbum().isEmpty()
+    }
 }
