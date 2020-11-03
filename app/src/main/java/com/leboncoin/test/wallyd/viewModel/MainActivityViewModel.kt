@@ -25,20 +25,22 @@ class MainActivityViewModel(private val repository: AlbumsRepository, app: Appli
 
     private val scope = CoroutineScope(coroutineContext)
 
-    fun fetchAlbumsFromDB(): Flow<PagingData<AlbumsModel>> {
-        return Pager(PagingConfig(pageSize = 5, enablePlaceholders = false, maxSize = 200)) {
+    private fun fetchAlbumsFromDB(): Flow<PagingData<AlbumsModel>> {
+        return Pager(PagingConfig(pageSize = 60, enablePlaceholders = true, maxSize = 200)) {
             MyPagingSource(repository, albumDao)
         }.flow.cachedIn(scope)
     }
-/*
+
     val albums: Flow<PagingData<AlbumSeparatorModel>> = fetchAlbumsFromDB()
         .map { pagingData ->
-            pagingData.map {
-                AlbumSeparatorModel.AlbumsItem(it)
+            pagingData.map { albumsModel ->
+                AlbumSeparatorModel.AlbumsItem(
+                    albumsModel
+                )
             }
         }
         .map {
-            it.insertSeparators { before, after ->
+            it.insertSeparators<AlbumSeparatorModel.AlbumsItem, AlbumSeparatorModel> { before, after ->
 
                 if (after == null) {
                     // we're at the end of the list
@@ -46,18 +48,13 @@ class MainActivityViewModel(private val repository: AlbumsRepository, app: Appli
                 }
 
                 if (before == null) {
+                    AlbumSeparatorModel.SeparatorModelItem("Album N° ${after.albumId}")
                     // we're at the beginning of the list
-                    return@insertSeparators null
+                    //MovieModel.SeparatorItem("${after.roundedVoteCount}0.000+ stars")
                 }
-
                 // check between 2 items
-                if (before.albumsModel?.albumId!! > after.albumsModel?.albumId!!) {
-
-                    if (after.albumsModel.albumId >= 1) {
-                        AlbumSeparatorModel.SeparatorModelItem("Album ${before.albumsModel.albumId}")
-                    } else {
-                        AlbumSeparatorModel.SeparatorModelItem("Less than 1000 vote count")
-                    }
+                if (before?.albumId ?: 1 < after.albumId) {
+                    AlbumSeparatorModel.SeparatorModelItem("Album N° ${before?.albumId?.plus(1)}")
                 } else {
                     // no separator
                     null
@@ -65,10 +62,7 @@ class MainActivityViewModel(private val repository: AlbumsRepository, app: Appli
             }
         }
 
- */
-
-    fun cancelAllRequest() {
-        coroutineContext.cancel()
-    }
+    private val AlbumSeparatorModel.AlbumsItem.albumId: Int
+        get() = albumsModel.albumId
 
 }

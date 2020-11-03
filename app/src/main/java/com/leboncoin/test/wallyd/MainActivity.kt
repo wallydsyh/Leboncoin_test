@@ -32,7 +32,6 @@ class MainActivity : AppCompatActivity() {
         setupViewModel()
         setUpAdapter()
         setUpObserver()
-
     }
 
     private fun setUpAdapter() {
@@ -59,16 +58,11 @@ class MainActivity : AppCompatActivity() {
             )
     }
 
-
     private fun setUpObserver() {
         lifecycleScope.launch {
-            fetchAlbumFromDatabase()
-        }
-    }
-
-    private suspend fun fetchAlbumFromDatabase() {
-        mainActivityViewModel.fetchAlbumsFromDB().collectLatest {
-            albumsAdapter.submitData(it)
+            mainActivityViewModel.albums.collectLatest {
+                albumsAdapter.submitData(it)
+            }
         }
     }
 }
