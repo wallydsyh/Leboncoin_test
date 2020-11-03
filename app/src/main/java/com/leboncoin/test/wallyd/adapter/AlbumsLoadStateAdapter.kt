@@ -3,42 +3,51 @@ package com.leboncoin.test.wallyd.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isVisible
+import androidx.databinding.DataBindingUtil
 import androidx.paging.LoadState
 import androidx.paging.LoadStateAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.leboncoin.test.wallyd.R
-import kotlinx.android.synthetic.main.load_state_view.view.*
+import com.leboncoin.test.wallyd.databinding.LoadStateViewBinding
 
 class AlbumsLoadStateAdapter(
     private val retry: () -> Unit
 ) : LoadStateAdapter<AlbumsLoadStateAdapter.LoadStateViewHolder>() {
+    private lateinit var binding: LoadStateViewBinding
 
     override fun onBindViewHolder(holder: LoadStateViewHolder, loadState: LoadState) {
+        val progress = binding.loadingIndicator
+        val buttonRetry = binding.buttonRetry
+        val txtErrorMessage = binding.textViewErrorMessage
 
-        val progress = holder.itemView.load_state_progress
-        val btnRetry = holder.itemView.load_state_retry
-        val txtErrorMessage = holder.itemView.load_state_errorMessage
-
-        btnRetry.isVisible = loadState !is LoadState.Loading
-        txtErrorMessage.isVisible = loadState !is LoadState.Loading
-        progress.isVisible = loadState is LoadState.Loading
-
-        if (loadState is LoadState.Error) {
-            txtErrorMessage.text = loadState.error.localizedMessage
+        when (loadState) {
+            is LoadState.Loading -> {
+                // show progress view
+                buttonRetry.visibility = View.GONE
+                progress.visibility = View.VISIBLE
+                txtErrorMessage.visibility = View.GONE
+            }
+            is LoadState.Error -> {
+                buttonRetry.visibility = View.VISIBLE
+                txtErrorMessage.visibility = View.VISIBLE
+                progress.visibility = View.GONE
+                txtErrorMessage.text = loadState.error.localizedMessage
+            }
+            else -> {
+                progress.visibility = View.GONE
+            }
         }
-
-        btnRetry.setOnClickListener {
+        buttonRetry.setOnClickListener {
             retry.invoke()
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, loadState: LoadState): LoadStateViewHolder {
+        val inflater: LayoutInflater = LayoutInflater.from(parent.context)
+        binding = DataBindingUtil.inflate(inflater, R.layout.load_state_view, parent, false)
         return LoadStateViewHolder(
-            LayoutInflater.from(parent.context)
-                .inflate(R.layout.load_state_view, parent, false)
+            binding.root
         )
     }
-
-    class LoadStateViewHolder(private val view: View) : RecyclerView.ViewHolder(view)
+    class LoadStateViewHolder(view: View) : RecyclerView.ViewHolder(view)
 }

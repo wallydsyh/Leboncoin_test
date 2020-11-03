@@ -1,13 +1,11 @@
 package com.leboncoin.test.wallyd
 
 import android.os.Bundle
-import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.leboncoin.test.wallyd.adapter.AlbumsAdapter
 import com.leboncoin.test.wallyd.adapter.AlbumsLoadStateAdapter
 import com.leboncoin.test.wallyd.api.ApiHelper
@@ -22,9 +20,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var mainActivityViewModel: MainActivityViewModel
     private lateinit var albumsAdapter: AlbumsAdapter
-    private lateinit var adapter: AlbumsLoadStateAdapter
     private lateinit var binding: ActivityMainBinding
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,7 +28,6 @@ class MainActivity : AppCompatActivity() {
         setupViewModel()
         setUpAdapter()
         setUpObserver()
-
     }
 
     private fun setUpAdapter() {
@@ -46,7 +41,6 @@ class MainActivity : AppCompatActivity() {
             layoutManager = LinearLayoutManager(this@MainActivity)
             adapter = albumsAdapter
         }
-
     }
 
     private fun setupViewModel() {
@@ -59,16 +53,11 @@ class MainActivity : AppCompatActivity() {
             )
     }
 
-
     private fun setUpObserver() {
         lifecycleScope.launch {
-            fetchAlbumFromDatabase()
-        }
-    }
-
-    private suspend fun fetchAlbumFromDatabase() {
-        mainActivityViewModel.fetchAlbumsFromDB().collectLatest {
-            albumsAdapter.submitData(it)
+            mainActivityViewModel.allAlbums.collectLatest {
+                albumsAdapter.submitData(it)
+            }
         }
     }
 }

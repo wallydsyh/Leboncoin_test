@@ -7,7 +7,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="24dp"
-        app:cardBackgroundColor="@color/orange"
         app:cardCornerRadius="5dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -19,7 +18,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="24dp"
-                android:text="album 1"
+                tools:text="album 1"
                 android:textColor="@color/black"
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -32,6 +31,7 @@
                 android:layout_height="90dp"
                 android:layout_marginStart="16dp"
                 android:padding="8dp"
+                android:contentDescription="album image"
                 android:scaleType="centerCrop"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -42,9 +42,9 @@
                 android:id="@+id/textView_id"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="1"
-                android:textSize="16sp"
+                tools:text="1"
                 android:textColor="@color/black"
+                android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="@+id/textView_album_title"
                 app:layout_constraintStart_toStartOf="@+id/textView_album_title"
                 app:layout_constraintTop_toBottomOf="@+id/textView_album_title" />
