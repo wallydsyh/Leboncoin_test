@@ -14,11 +14,15 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.io.IOException
+import java.util.ArrayList
 
 @RunWith(AndroidJUnit4::class)
 class AlbumDatabaseTest {
-    private var albumDao: AlbumDao? = null
+    private lateinit var albumDao: AlbumDao
     private lateinit var dataBase: AlbumDataBase
+    private val albumsModel = AlbumsModel(1, 1, "new Album", "url", "thumbnailUrl")
+    private var albumList = ArrayList<AlbumsModel>()
+
 
     @Before
     fun setup() {
@@ -38,11 +42,23 @@ class AlbumDatabaseTest {
 
     @Test
     @Throws(Exception::class)
-    fun writeAndReadAlbums() {
-        val albumsModel = AlbumsModel(1, 1, "new Album", "url", "thumbnailUrl")
-        albumDao?.insert(albumsModel)
-        val byId = albumDao?.getAlbum(1)
-        assertThat(albumsModel, equalTo(byId))
+    fun writeAndReadAlbum() {
+        albumDao.insert(albumsModel)
+        val albumModel = albumDao.getAlbumByAlbumId(1)
+        assertThat(albumsModel, equalTo(albumModel))
+    }
 
+
+    @Test
+    fun addAlbumInDatabase() {
+        albumList.add(albumsModel)
+        albumDao.insert(albumList)
+        assertThat(albumDao.getAlbumByAlbumId(albumsModel.albumId), equalTo(albumsModel))
+    }
+
+    @Test
+    fun checkIfAlbumContains50songs() {
+      //  albumList = albumDao.getAllAlbumsByAlbumId(1)
+        assertThat(albumList.size, equalTo(50))
     }
 }

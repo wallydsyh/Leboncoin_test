@@ -4,14 +4,15 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import java.util.ArrayList
 
 @Dao
 interface AlbumDao {
     @Query("SELECT * FROM AlbumsModel WHERE albumId = :albumId")
-    fun allAlbums(albumId: Int): List<AlbumsModel>
+    fun getAllAlbumsByAlbumId(albumId: Int): List<AlbumsModel>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(albums: List<AlbumsModel>)
+     fun insert(albums: List<AlbumsModel>)
 
     @Insert
      fun insert(album: AlbumsModel)
@@ -20,6 +21,6 @@ interface AlbumDao {
     suspend fun isAlbumsExist(): List<AlbumsModel>
 
     @Query("SELECT * FROM AlbumsModel WHERE albumId = :albumId")
-     fun getAlbum(albumId: Int): AlbumsModel
+     fun getAlbumByAlbumId(albumId: Int): AlbumsModel
 
 }

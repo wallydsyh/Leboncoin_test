@@ -15,7 +15,7 @@ class MyPagingSource(
             if (isDatabaseEmpty()) {
                 albumDao.insert(repository.getAlbumsList())
             }
-            val data = albumDao.allAlbums(nextPageNumber)
+            val data = albumDao.getAllAlbumsByAlbumId(nextPageNumber)
             LoadResult.Page(
                 data = data,
                 prevKey = if (nextPageNumber == 1) null else nextPageNumber - 1, // Only paging forward.
