@@ -1,7 +1,7 @@
-package com.leboncoin.test.wallyd.model.source
+package com.leboncoin.test.wallyd.data
 
 import androidx.paging.PagingSource
-import com.leboncoin.test.wallyd.model.AlbumDao
+import com.leboncoin.test.wallyd.data.AlbumDao
 import com.leboncoin.test.wallyd.model.AlbumsModel
 import com.leboncoin.test.wallyd.repository.AlbumsRepository
 

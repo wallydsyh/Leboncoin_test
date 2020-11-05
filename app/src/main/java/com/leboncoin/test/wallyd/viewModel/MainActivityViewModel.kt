@@ -3,10 +3,10 @@ package com.leboncoin.test.wallyd.viewModel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.paging.*
-import com.leboncoin.test.wallyd.model.AlbumDataBase
+import com.leboncoin.test.wallyd.data.AlbumDataBase
 import com.leboncoin.test.wallyd.model.AlbumSeparatorModel
 import com.leboncoin.test.wallyd.model.AlbumsModel
-import com.leboncoin.test.wallyd.model.source.MyPagingSource
+import com.leboncoin.test.wallyd.data.MyPagingSource
 import com.leboncoin.test.wallyd.repository.AlbumsRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

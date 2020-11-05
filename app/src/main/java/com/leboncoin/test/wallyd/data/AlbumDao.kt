@@ -1,10 +1,10 @@
-package com.leboncoin.test.wallyd.model
+package com.leboncoin.test.wallyd.data
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import java.util.ArrayList
+import com.leboncoin.test.wallyd.model.AlbumsModel
 
 @Dao
 interface AlbumDao {

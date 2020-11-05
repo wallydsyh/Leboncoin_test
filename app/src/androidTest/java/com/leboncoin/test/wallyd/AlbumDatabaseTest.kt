@@ -5,8 +5,8 @@ import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.matcher.ViewMatchers.assertThat
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.leboncoin.test.wallyd.model.AlbumDao
-import com.leboncoin.test.wallyd.model.AlbumDataBase
+import com.leboncoin.test.wallyd.data.AlbumDao
+import com.leboncoin.test.wallyd.data.AlbumDataBase
 import com.leboncoin.test.wallyd.model.AlbumsModel
 import org.hamcrest.CoreMatchers.equalTo
 import org.junit.After
@@ -14,7 +14,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.io.IOException
-import java.util.ArrayList
+import java.util.*
 
 @RunWith(AndroidJUnit4::class)
 class AlbumDatabaseTest {
@@ -54,11 +54,5 @@ class AlbumDatabaseTest {
         albumList.add(albumsModel)
         albumDao.insert(albumList)
         assertThat(albumDao.getAlbumByAlbumId(albumsModel.albumId), equalTo(albumsModel))
-    }
-
-    @Test
-    fun checkIfAlbumContains50songs() {
-      //  albumList = albumDao.getAllAlbumsByAlbumId(1)
-        assertThat(albumList.size, equalTo(50))
     }
 }

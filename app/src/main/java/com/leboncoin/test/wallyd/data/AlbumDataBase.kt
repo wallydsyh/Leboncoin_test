@@ -1,9 +1,10 @@
-package com.leboncoin.test.wallyd.model
+package com.leboncoin.test.wallyd.data
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.leboncoin.test.wallyd.model.AlbumsModel
 
 @Database(entities = [AlbumsModel::class], version = 1, exportSchema = false)
 abstract class AlbumDataBase : RoomDatabase() {
@@ -20,7 +21,8 @@ abstract class AlbumDataBase : RoomDatabase() {
         ): AlbumDataBase {
             // if the INSTANCE is not null, then return it,
             // if it is, then create the database
-            return INSTANCE ?: synchronized(this) {
+            return INSTANCE
+                ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     AlbumDataBase::class.java,
